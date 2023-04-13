@@ -20,16 +20,79 @@ body {
 div {
     display: block;
 }
-.header {
-    width: 100%;
-    margin-right: auto;
-    margin-left: auto;
-    padding-right: 15px;
-    padding-left: 15px;
-    width: 100%;
+.header{
+    position: fixed;
+    top: 0%; left: 0 ; right: 0;
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+    background:#fff;
+    box-shadow:0 .5rem 1rem rgba(0, 0, 0, .1);
+    padding: 2rem 9%;
+}
+
+.header .NavBar{
+    margin-left: 6rem;
+    margin-top: 0rem;
+    align-items: center;
+}
+.header .NavBar a{
+    margin: 0 1rem;
+    font-size: 1.7rem;
+    margin-top: -10rem;
+
+}
+.header .Logo img{
+    padding-left: .5rem;
+}
+.header .honda-logo{
+    font-size: 2.3rem;
 }
 .no-padding {
     padding: 0 0 !important;
 }
+.header .sign{
+    margin-top: 0;
+}
+.sign{
+    display: inline-block;
+    padding: .9rem 1.5rem;
+    border-radius: var(--border-radius);
+    border: var(--border);
+    background: none;
+    color: var(--main-color);
+    margin-top: 1rem;
+    cursor: pointer;
+    font-size: 1.7rem;
+    margin-left: 5.5rem;
+}
+.home{
+    min-height: 5h;
+    padding-top: 12rem;
+    background-position: center;
+    background-size: cover;
+    margin-top: -15rem;
+    
+}
+.home .row{
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 0%;
+}
+.home .row .content{
+    flex: 1 1 42rem;
+}
+.home .row .image{
+    flex: 1 1 42rem;
+    padding-top: 10rem;
+    text-align:center;
+
+}
+.home .row .image img{
+    height:42rem;
+}
+
 
 
