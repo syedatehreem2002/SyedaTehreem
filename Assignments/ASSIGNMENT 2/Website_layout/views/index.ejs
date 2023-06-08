@@ -26,7 +26,7 @@
 
 
         </nav>
-        <a href="#" class="btn">Book a Table</a>
+        <a href="#book" class="btn">Book a Table</a>
         
     </header>
     <section class="home" id="home">
@@ -222,13 +222,15 @@
     <section class="book" id="book">
         <h1 class="heading">booking<span>reserve a table</span></h1>
 
-        <form action="">
-            <input type="text" placeholder="your name" class="box">
-            <input type="email" placeholder="your email" class="box">
-            <input type="number" placeholder="your number" class="box">
-            <textarea placeholder="your message" name="" class="box" cols="30" rows="10"></textarea>
-            <input type="submit" value="send message" class="btn">
-        </form>
+        <form action="/bookings" method="POST">
+            <input type="text" placeholder="Your Name" class="box" name="name">
+            <input type="email" placeholder="Your Email" class="box" name="email">
+            <input type="number" placeholder="Your Number" class="box" name="phoneNo">
+            <input type="number" placeholder="No of Persons" class="box" name="numberOfPersons">
+            <textarea placeholder="Your Message" class="box" cols="30" rows="10" name="message"></textarea>
+            <input type="submit" value="Confirm Booking" class="btn">
+          </form>
+          
     </section>
 
     <section class="footer"> 

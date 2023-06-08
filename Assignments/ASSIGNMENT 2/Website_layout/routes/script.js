@@ -1,3 +1,5 @@
+
+
 console.log("From External JS File");
 
 document.querySelectorAll(".image-slider > img").forEach(images => {
