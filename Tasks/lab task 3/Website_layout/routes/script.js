@@ -31,6 +31,34 @@ var swiper = new Swiper(".review-slider",{
         },
     },
 });
+// Get a reference to the update button element
+const updateButton = document.getElementById('update-button');
+
+// Add an event listener to the button
+updateButton.addEventListener('click', async () => {
+  // Retrieve the edited field value
+  const updatedField = document.getElementById('edited-field').value;
+
+  // Send an update request to the server
+  try {
+    const response = await fetch('/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ field: updatedField })
+    });
+
+    if (response.ok) {
+      // Update successful, refresh the page
+      location.reload();
+    } else {
+      console.error('Update failed:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Update failed:', error);
+  }
+});
 
 let menu = document.querySelector('#menu_btn');
 let NavBar = document.querySelector('.NavBar');

@@ -1,18 +1,13 @@
 const express = require('express');
+const Booking = require('./models/booking');
 const mongoose = require('mongoose');
+const bookingRouter = require('./routes/booking');
 
 const app = express();
 const port = 3000;
 
-app.set('view engine', 'ejs');
-
-// Serve static files from the 'public' folder
-app.use(express.static('public'));
-
-// // MongoDB connection
-
-// MongoDB connection
-mongoose.connect('mongodb://127.0.0.1:27017/latestdb', {
+// Connect to MongoDB
+mongoose.connect('mongodb://127.0.0.1:27017/ST_CAFE', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -23,40 +18,120 @@ mongoose.connect('mongodb://127.0.0.1:27017/latestdb', {
     console.error('MongoDB connection error:', err);
   });
 
-  const homeRouter = require('./routes');
-  app.use('/index', homeRouter);
-  //app.use('/bookings', homeRouter);
+app.use(express.json());
 
+// Middleware to parse request bodies
+app.use(express.urlencoded({ extended: true }));
 
-//const booking = require('./models/booking');
+// Import the Booking model
 
-// const bookingSchema = new mongoose.Schema({
-//   name: { type: String, required: true },
-//   email: { type: String, required: true },
-  
-//   message: { type: String, required: true },
-//   phoneNo: { type: String, required: true },
-//   numberOfPersons: { type: Number, required: true },
-//   // Add any other relevant fields for the booking
-// });
+// Set up view engine
+app.set('view engine', 'ejs');
 
-// let Booking = mongoose.model('Booking', bookingSchema);
+// Set up static folder
+app.use(express.static('public'));
 
+// Mount the bookingRouter to the /api endpoint
+app.use('/api', bookingRouter);
 
-// app.post('/bookings', (req, res)=> {
-  
-//   console.log("Trying to save booking!!");
-//   Booking.create(req.body.booking, (error, savedBooking) => {
-//     if (error) {
-//       console.log("Error saving Booking")
-//     } else {
-//       console.log("Booking Saved!!" + savedBooking);
-//       res.redirect('/index');
-//     }
-//   })
-// })
+// Handle POST request to /booking
+app.post('/booking', (req, res) => {
+  const { name, email, phoneNo, numberOfPersons } = req.body;
 
+  // Create a new booking instance
+  const newBooking = new Booking({
+    name: name,
+    email: email,
+    phoneNo: phoneNo,
+    numberOfPersons: numberOfPersons
+  });
 
+  // Save the new booking to the database
+  newBooking.save()
+    .then(() => {
+      Booking.find()
+        .then((bookingList) => {
+          if (bookingList) {
+            console.log(bookingList);
+            res.render('index', { bookingData: bookingList });
+          }
+        })
+        .catch((error) => {
+          console.log(err);
+          res.status(400).send("Bad Request");
+        });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+});
+
+// GET route to render the edit form for a booking
+app.get('/booking/:id/edit', (req, res) => {
+  const bookingId = req.params.id;
+
+  Booking.findById(bookingId, (err, booking) => {
+    if (err) {
+      console.log(err);
+      res.send('Error retrieving booking');
+    } else {
+      res.render('edit', { booking });
+    }
+  });
+});
+
+// POST route to update a booking
+app.post("/booking/:id/edit", async (req, res) => {
+  try {
+    const bookingId = req.params.id;
+    const { name, email, phoneNo, numberOfPersons } = req.body;
+
+    // Find the booking by ID and update the specific fields
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      bookingId,
+      { name, email, phoneNo, numberOfPersons }, // Update the field names here
+      { new: true }
+    );
+
+    if (updatedBooking) {
+      res.redirect("/"); // Redirect back to the index page
+    } else {
+      res.redirect("/"); // Redirect back to the index page
+    }
+  } catch (err) {
+    console.log(err);
+    res.redirect("/"); // Redirect back to the index page
+  }
+});
+// POST route to delete a booking
+app.post('/booking/:id/delete', (req, res) => {
+  const bookingId = req.params.id;
+
+  Booking.findByIdAndRemove(bookingId)
+    .then(() => {
+      res.redirect('/'); // Redirect back to the index page
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send('Error deleting booking');
+    });
+});
+
+// GET route to render the index page with all bookings
+app.get('/', (req, res) => {
+  Booking.find()
+    .then((bookingList) => {
+      if (bookingList) {
+        res.render('index', { bookingData: bookingList });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).send("Bad Request");
+    });
+});
+// Start the server
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server listening at http://localhost:${port}`);
 });

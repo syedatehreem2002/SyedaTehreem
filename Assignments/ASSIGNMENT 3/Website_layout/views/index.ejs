@@ -21,7 +21,8 @@
             <a href="#about">About</a>
             <a href="#menu">Menu</a>
             <a href="#review">Review</a>
-            <a href="#book">Book</a>
+            <a href="#recent-bookings">Recent Bookings</a> <!-- Add this line -->
+            <a href="#edit-booking">Edit Booking</a>
             
 
 
@@ -222,27 +223,81 @@
     <section class="book" id="book">
         <h1 class="heading">booking<span>reserve a table</span></h1>
 
-        <form action="/bookings" method="POST">
-            <input type="text" placeholder="Your Name" class="box" name="name">
-            <input type="email" placeholder="Your Email" class="box" name="email">
-            <input type="number" placeholder="Your Number" class="box" name="phoneNo">
-            <input type="number" placeholder="No of Persons" class="box" name="numberOfPersons">
-            <textarea placeholder="Your Message" class="box" cols="30" rows="10" name="message"></textarea>
-            <input type="submit" value="Confirm Booking" class="btn">
-          </form>
+        <form action="/booking" method="POST">
+            <!-- Form fields -->
+            <input type="text" name="name" placeholder="Name" required class="box">
+            <input type="email" name="email" placeholder="Email" required  class="box">
+            <input type="tel" name="phoneNo" placeholder="Phone Number" required class="box">
+            <input type="number" name="numberOfPersons" placeholder="Number of Persons" required class="box">
           
+            <!-- Submit button -->
+            <button type="submit" valu="Confirm Booking" class="btn">Submit</button>
+          </form>
     </section>
-
-    <section class="footer"> 
+    <section class="recent-bookings" id="recent-bookings">
+        <h1 class="heading">Recent <span>bookings</span></h1>
         <div class="box-container">
             <div class="box">
-                <h3>Our branches</h3>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i>Pakistan</a>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i>USA</a>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i>UK</a>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i>Canada</a>
-                <a href="#"><i class="fa-solid fa-arrow-right"></i>Korea</a>
+                <h3 style="font-size: 20px;">List of all the Bookings:</h3>
+                <ul style="list-style-type: none;">
+                    <% bookingData.forEach(booking => { %>
+                        <li style="font-size: 18px;">
+                            <i class="fa-solid fa-arrow-right"></i>Name: <%= booking.name %>, Email: <%= booking.email %>
+                            <form action="/booking/<%= booking._id %>/edit" method="GET" style="display: inline;">
+                                
+                            </form>
+                            <form action="/booking/<%= booking._id %>/delete" method="POST" style="display: inline;">
+                                <button type="submit" class="btn">Delete</button>
+                            </form>
+                        </li>
+                    <% }); %>
+                </ul>
             </div>
+        </div>
+    </section>
+    
+    <section class="edit" id="edit-bookings" style="background-image: url('/images/ff.jpg');">
+        <h1 class="heading">Edit <span>bookings</span></h1>
+        <% bookingData.forEach(booking => { %>
+            <div class="form-container">
+                <form action="/booking/<%= booking._id %>/edit" method="POST">
+                    <!-- Edit form fields -->
+                    <input type="text" name="name" value="<%= booking.name %>" required class="box">
+                    <input type="email" name="email" value="<%= booking.email %>" required class="box">
+                    <input type="tel" name="phoneNo" value="<%= booking.phoneNo %>" required class="box">
+                    <input type="number" name="numberOfPersons" value="<%= booking.numberOfPersons %>" required class="box">
+                  
+                    <!-- Submit button -->
+                    <button type="submit" value="Update Booking" class="btn">Update</button>
+                </form>
+            </div>
+        <% }); %>
+    </section>
+    
+<style>
+    .recent-bookings {
+        background-image: url('/images/f2.jpg');
+        background-size: cover;
+        background-position: center;
+        /* Add any other background properties as needed */
+    }
+    .form-container {
+  
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.form-container .box{
+    border: 1px solid black;
+}
+.box {
+  
+  padding: 5px;
+  margin-bottom: 5px;
+}
+</style>
+    
+    <section class="footer"> 
+        <div class="box-container">
             <div class="box">
                 <h3>Quick Links</h3>
                 <a href="#"><i class="fa-solid fa-arrow-right"></i>Home</a>
